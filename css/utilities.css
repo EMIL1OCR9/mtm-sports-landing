@@ -1,0 +1,80 @@
+/* ============================================
+   UTILITIES — Helpers reutilizables
+   ============================================ */
+
+/* ── Texto ── */
+.text-center  { text-align: center; }
+.text-left    { text-align: left; }
+.text-muted   { color: var(--text-muted); }
+.text-primary { color: var(--color-primary); }
+.text-white   { color: var(--color-white); }
+
+/* ── Display ── */
+.d-flex         { display: flex; }
+.d-grid         { display: grid; }
+.align-center   { align-items: center; }
+.justify-center { justify-content: center; }
+.flex-wrap      { flex-wrap: wrap; }
+
+/* ── Spacing ── */
+.mt-sm  { margin-top: var(--space-sm); }
+.mt-md  { margin-top: var(--space-md); }
+.mt-lg  { margin-top: var(--space-lg); }
+.mt-xl  { margin-top: var(--space-xl); }
+.mb-sm  { margin-bottom: var(--space-sm); }
+.mb-md  { margin-bottom: var(--space-md); }
+.mb-lg  { margin-bottom: var(--space-lg); }
+.mb-xl  { margin-bottom: var(--space-xl); }
+
+/* ── Screen reader only (accesibilidad) ── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* ── Skip link (accesibilidad teclado) ── */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  background: var(--color-primary);
+  color: var(--color-black);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-size: var(--text-sm);
+  z-index: 9999;
+  text-decoration: none;
+  transition: top var(--transition-base);
+}
+
+.skip-link:focus { top: 1rem; }
+
+/* ── Contenedor genérico ── */
+.container {
+  width: 100%;
+  max-width: 75rem;
+  margin: 0 auto;
+  padding: 0 5%;
+}
+
+/* ── Aspect ratios ── */
+.ratio-4-3  { aspect-ratio: 4 / 3; }
+.ratio-16-9 { aspect-ratio: 16 / 9; }
+.ratio-1-1  { aspect-ratio: 1 / 1; }
+
+/* ── Visibilidad responsive ── */
+@media (max-width: 37.5rem) {
+  .hide-mobile { display: none !important; }
+}
+
+@media (min-width: 37.5625rem) {
+  .hide-desktop { display: none !important; }
+}

@@ -1,0 +1,123 @@
+/* ============================================
+   BASE — Variables, Reset, Tipografía global
+   ============================================ */
+
+:root {
+  /* Colores marca */
+  --color-primary:       #A8E63D;
+  --color-primary-dark:  #8BC931;
+  --color-black:         #0A0A0A;
+  --color-black-soft:    #060606;
+  --color-dark:          #141414;
+  --color-dark-mid:      #1E1E1E;
+  --color-gray-light:    #F0F0F0;
+  --color-gray-soft:     #F8F8F6;
+  --color-white:         #FFFFFF;
+
+  /* Colores texto */
+  --text-primary:        #0A0A0A;
+  --text-secondary:      #555555;
+  --text-muted:          #999999;
+  --text-on-dark:        rgba(255, 255, 255, 0.65);
+  --text-on-dark-muted:  rgba(255, 255, 255, 0.45);
+
+  /* Tipografía */
+  --font-display:  'Barlow Condensed', sans-serif;
+  --font-body:     'Barlow', sans-serif;
+
+  --text-xs:    0.6875rem;  /* 11px */
+  --text-sm:    0.8125rem;  /* 13px */
+  --text-base:  0.875rem;   /* 14px */
+  --text-md:    1rem;       /* 16px */
+  --text-lg:    1.0625rem;  /* 17px */
+  --text-xl:    1.5rem;     /* 24px */
+
+  /* Espaciado */
+  --space-xs:   0.5rem;
+  --space-sm:   0.75rem;
+  --space-md:   1rem;
+  --space-lg:   1.5rem;
+  --space-xl:   2rem;
+  --space-2xl:  3rem;
+  --space-3xl:  5.625rem;  /* 90px secciones */
+
+  /* Radios */
+  --radius-sm:   0.375rem;
+  --radius-md:   0.75rem;
+  --radius-lg:   0.875rem;
+  --radius-xl:   1rem;
+  --radius-full: 9999px;
+
+  /* Bordes */
+  --border-light:    1px solid rgba(0, 0, 0, 0.07);
+  --border-dark:     1px solid rgba(255, 255, 255, 0.07);
+  --border-primary:  1px solid rgba(168, 230, 61, 0.3);
+
+  /* Sombras */
+  --shadow-sm:  0 4px 16px rgba(168, 230, 61, 0.35);
+  --shadow-md:  0 12px 32px rgba(0, 0, 0, 0.08);
+  --shadow-lg:  0 20px 48px rgba(0, 0, 0, 0.12);
+
+  /* Transiciones */
+  --transition-fast:   0.15s ease;
+  --transition-base:   0.2s ease;
+  --transition-slow:   0.35s ease;
+
+  /* Layout */
+  --section-padding:   var(--space-3xl) 5%;
+  --section-padding-mobile: 3.75rem 5%;
+}
+
+/* ── Reset ── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--color-white);
+  color: var(--text-primary);
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a { color: inherit; }
+
+ul { list-style: none; }
+
+/* ── Accesibilidad — Focus visible ── */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+/* ── Reducir movimiento ── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html { scroll-behavior: auto; }
+}
