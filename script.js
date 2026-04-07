@@ -11,7 +11,8 @@ camera.position.set(0, 0, 5);
 function crearTextura() {
   const size = 1024;
   const cv = document.createElement('canvas');
-  cv.width = size; cv.height = size;
+  cv.width = size; 
+  cv.height = size;
   const ctx = cv.getContext('2d');
 
   ctx.fillStyle = '#C8E830';
@@ -64,6 +65,7 @@ const material = new THREE.MeshStandardMaterial({
   roughness: 0.45,
   metalness: 0.05,
 });
+
 const pelota = new THREE.Mesh(geometry, material);
 pelota.position.set(2.8, 0.2, 0);
 scene.add(pelota);
@@ -103,18 +105,54 @@ const precios = {
 };
 
 const extras = {
-  sintetico: [30, 60],
-  madera:    [40, 80],
-  led:       [20, 50],
-  bardas:    [15, 40],
-  pintura:   [8, 20]
+  pisoPropio:   [-15, -10],
+  asfalto:      [20, 35],
+  led:          [20, 50],
+  mallas:       [15, 40],
+  canastas:     [8, 20],
+  redes:        [8, 18],
+  pintura:      [8, 20],
+  pasto:        [30, 60],
+  capacitacion: [5, 10]
 };
 
-const activos = { led: false, bardas: false, pintura: false };
+const activos = {
+  pisoPropio: false,
+  asfalto: false,
+  led: false,
+  mallas: false,
+  canastas: false,
+  redes: false,
+  pintura: false,
+  pasto: false,
+  capacitacion: false
+};
 
 function toggleExtra(key) {
+  if (key === 'pisoPropio' && activos.asfalto) {
+    activos.asfalto = false;
+    document.getElementById('t-asfalto').classList.remove('on');
+  }
+
+  if (key === 'asfalto' && activos.pisoPropio) {
+    activos.pisoPropio = false;
+    document.getElementById('t-piso-propio').classList.remove('on');
+  }
+
   activos[key] = !activos[key];
-  document.getElementById('t-' + key).classList.toggle('on', activos[key]);
+
+  const toggleId =
+    key === 'pisoPropio' ? 't-piso-propio' :
+    key === 'asfalto'    ? 't-asfalto' :
+    key === 'led'        ? 't-led' :
+    key === 'mallas'     ? 't-mallas' :
+    key === 'canastas'   ? 't-canastas' :
+    key === 'redes'      ? 't-redes' :
+    key === 'pintura'    ? 't-pintura' :
+    key === 'pasto'      ? 't-pasto' :
+                           't-capacitacion';
+
+  document.getElementById(toggleId).classList.toggle('on', activos[key]);
   calcular();
 }
 
@@ -124,25 +162,29 @@ function fmt(n) {
 
 function calcular() {
   const cancha = document.getElementById('cancha').value;
-  const piso   = document.getElementById('piso').value;
   if (!cancha) return;
 
   let min = precios[cancha][0];
   let max = precios[cancha][1];
 
-  if (piso !== 'cemento') { min += extras[piso][0]; max += extras[piso][1]; }
-  if (activos.led)        { min += extras.led[0];   max += extras.led[1]; }
-  if (activos.bardas)     { min += extras.bardas[0]; max += extras.bardas[1]; }
-  if (activos.pintura)    { min += extras.pintura[0]; max += extras.pintura[1]; }
+  Object.keys(activos).forEach(key => {
+    if (activos[key] && extras[key]) {
+      min += extras[key][0];
+      max += extras[key][1];
+    }
+  });
 
-  document.getElementById('estimado-precio').textContent = fmt(min) + ' — ' + fmt(max);
+  min = Math.max(min, 20);
+
+  document.getElementById('estimado-precio').textContent =
+    fmt(min) + ' — ' + fmt(max);
+
   document.getElementById('estimado-box').classList.add('show');
 }
 
 function enviarCotizacion() {
   const nombre = document.getElementById('f-nombre').value.trim();
   const tel    = document.getElementById('f-tel').value.trim();
-  const email  = document.getElementById('f-email').value.trim();
   const cancha = document.getElementById('cancha').value;
 
   if (!nombre || !tel || !cancha) {
@@ -150,16 +192,18 @@ function enviarCotizacion() {
     return;
   }
 
-  const ciudad  = document.getElementById('f-ciudad').value;
-  const tipo    = document.getElementById('f-tipo').value;
-  const msg     = document.getElementById('f-msg').value;
+  const ciudad   = document.getElementById('f-ciudad').value;
+  const tipo     = document.getElementById('f-tipo').value;
+  const msg      = document.getElementById('f-msg').value;
   const estimado = document.getElementById('estimado-precio').textContent;
 
-  const texto = `Hola MTM Sports, me interesa una cotización:%0A%0A*Cancha:* ${cancha}%0A*Estimado:* ${estimado}%0A*Nombre:* ${nombre}%0A*Ciudad:* ${ciudad}%0A*Cliente:* ${tipo}%0A*Comentarios:* ${msg}`;
+  const extrasActivos = Object.keys(activos)
+    .filter(k => activos[k])
+    .join(', ') || 'Ninguno';
 
-  // Reemplaza el número con el tuyo
+  const texto = `Hola MTM Sports, me interesa una cotización:%0A%0A*Cancha:* ${cancha}%0A*Extras:* ${extrasActivos}%0A*Estimado:* ${estimado}%0A*Nombre:* ${nombre}%0A*Ciudad:* ${ciudad}%0A*Cliente:* ${tipo}%0A*Comentarios:* ${msg}`;
+
   window.open(`https://wa.me/5213300000000?text=${texto}`, '_blank');
-
   document.getElementById('form-success').classList.add('show');
 }
 
@@ -167,7 +211,10 @@ function enviarCotizacion() {
 function toggleFaq(el) {
   const item = el.parentElement;
   const isOpen = item.classList.contains('open');
-  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+
+  document.querySelectorAll('.faq-item')
+    .forEach(i => i.classList.remove('open'));
+
   if (!isOpen) item.classList.add('open');
 }
 
