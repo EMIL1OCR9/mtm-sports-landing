@@ -1,10 +1,10 @@
-# 🏟️ MTM Sports Landing Page
+#  MTM Sports Landing Page 
 
 Landing page desarrollada para una empresa de construcción de canchas deportivas en México, enfocada en conversión, experiencia de usuario y diseño moderno.
 
 ---
 
-## 🚀 Características
+##  Características
 
 * Diseño responsive
 * UI moderna orientada a conversión
@@ -16,7 +16,7 @@ Landing page desarrollada para una empresa de construcción de canchas deportiva
 
 ---
 
-## 🛠️ Tecnologías
+##  Tecnologías
 
 * HTML5
 * CSS3 (modular: base, layout, components, sections, utilities)
@@ -60,7 +60,7 @@ Desarrollar una landing page funcional enfocada en generar leads reales para un 
 
 ---
 
-## 👨‍💻 Autor
+##  Autor
 
 Desarrollado por Carlos Emilio Castro Ramos
 Estudiante de Ciencia de Datos
