@@ -19,13 +19,18 @@
   <!-- NAVEGACIÓN -->
   <nav id="navbar" class="navbar">
     <a href="#hero" class="navbar__logo">MTM <span>SPORTS</span></a>
-    <ul class="navbar__links">
-      <li><a href="#canchas">Canchas</a></li>
-      <li><a href="#galeria">Proyectos</a></li>
-      <li><a href="#porque">Nosotros</a></li>
-      <li><a href="#faq">FAQ</a></li>
-      <li><a href="#cotizador" class="navbar__cta">COTIZA GRATIS</a></li>
+    <ul class="navbar__links" id="nav-menu">
+      <li><a href="#canchas" onclick="cerrarMenu()">Canchas</a></li>
+      <li><a href="#galeria" onclick="cerrarMenu()">Proyectos</a></li>
+      <li><a href="#porque" onclick="cerrarMenu()">Nosotros</a></li>
+      <li><a href="#faq" onclick="cerrarMenu()">FAQ</a></li>
+      <li><a href="#cotizador" class="navbar__cta" onclick="cerrarMenu()">COTIZA GRATIS</a></li>
     </ul>
+    <button class="navbar__hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Abrir menú">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
   </nav>
 
   <!-- HERO -->
@@ -468,19 +473,35 @@
         </div>
       </div>
     </div>
+
     <div class="clientes">
       <p class="clientes__title">Clientes que confían en nosotros</p>
-      <div class="clientes__grid">
-        <div class="clientes__item">EMPRESA A</div>
-        <div class="clientes__item">MUNICIPIO B</div>
-        <div class="clientes__item">ESCUELA C</div>
-        <div class="clientes__item">FRACC. D</div>
-        <div class="clientes__item">CLUB E</div>
-        <div class="clientes__item">GOBIERNO F</div>
+      <div class="clientes__carrusel">
+        <div class="clientes__track" id="clientes-track">
+          <div class="clientes__logo">EMPRESA A</div>
+          <div class="clientes__logo">MUNICIPIO B</div>
+          <div class="clientes__logo">ESCUELA C</div>
+          <div class="clientes__logo">FRACC. D</div>
+          <div class="clientes__logo">CLUB E</div>
+          <div class="clientes__logo">GOBIERNO F</div>
+          <div class="clientes__logo">EMPRESA G</div>
+          <div class="clientes__logo">MUNICIPIO H</div>
+          <!-- Duplicados para loop infinito -->
+          <div class="clientes__logo">EMPRESA A</div>
+          <div class="clientes__logo">MUNICIPIO B</div>
+          <div class="clientes__logo">ESCUELA C</div>
+          <div class="clientes__logo">FRACC. D</div>
+          <div class="clientes__logo">CLUB E</div>
+          <div class="clientes__logo">GOBIERNO F</div>
+          <div class="clientes__logo">EMPRESA G</div>
+          <div class="clientes__logo">MUNICIPIO H</div>
+        </div>
       </div>
-      <p class="clientes__note">📝 Reemplaza estos con los nombres o logos reales de tus clientes</p>
+      <p class="clientes__note">📝 Reemplaza el texto por los nombres o logos reales de tus clientes</p>
     </div>
+
   </section>
+  <!-- ✅ CORRECCIÓN: cierre de #testimonios estaba faltando aquí -->
 
   <!-- SEPARADOR: Testimonios → Cotizador -->
   <div class="sep-diagonal-inv"></div>

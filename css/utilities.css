@@ -3,11 +3,12 @@
    ============================================ */
 
 /* ── Texto ── */
-.text-center  { text-align: center; }
-.text-left    { text-align: left; }
-.text-muted   { color: var(--text-muted); }
-.text-primary { color: var(--color-primary); }
-.text-white   { color: var(--color-white); }
+.text-center    { text-align: center; }
+.text-left      { text-align: left; }
+.text-muted     { color: var(--text-muted); }
+.text-brand     { color: var(--color-primary); }   /* antes: .text-primary — renombrado para evitar colisión con --text-primary */
+.text-white     { color: var(--color-white); }
+.text-secondary { color: var(--text-secondary); }
 
 /* ── Display ── */
 .d-flex         { display: flex; }
@@ -78,3 +79,4 @@
 @media (min-width: 37.5625rem) {
   .hide-desktop { display: none !important; }
 }
+

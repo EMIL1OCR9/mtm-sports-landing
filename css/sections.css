@@ -432,6 +432,12 @@
   transition: all var(--transition-base);
 }
 
+.extra-check::after {
+  content: '';
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
 .extra-toggle.on .extra-check {
   background: var(--color-primary);
   border-color: var(--color-primary);
@@ -439,7 +445,10 @@
   font-weight: 700;
 }
 
-.extra-toggle.on .extra-check::after { content: '✓'; }
+.extra-toggle.on .extra-check::after {
+  content: '✓';
+  opacity: 1;
+}
 
 .extra-label {
   font-size: var(--text-sm);

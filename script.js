@@ -218,3 +218,28 @@ function toggleFaq(el) {
   if (!isOpen) item.classList.add('open');
 }
 
+// ── MENÚ HAMBURGUESA ──
+function toggleMenu() {
+  const menu       = document.getElementById('nav-menu');
+  const hamburger  = document.getElementById('hamburger');
+  const isOpen     = menu.classList.contains('open');
+
+  menu.classList.toggle('open', !isOpen);
+  hamburger.classList.toggle('open', !isOpen);
+
+  // Bloquear scroll del body cuando el menú está abierto
+  document.body.style.overflow = isOpen ? '' : 'hidden';
+}
+
+function cerrarMenu() {
+  const menu      = document.getElementById('nav-menu');
+  const hamburger = document.getElementById('hamburger');
+  menu.classList.remove('open');
+  hamburger.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// Cerrar menú al hacer resize a desktop
+window.addEventListener('resize', () => {
+  if (window.innerWidth > 900) cerrarMenu();
+});

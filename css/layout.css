@@ -58,6 +58,39 @@
 
 .navbar__cta:hover { background: var(--color-dark-mid) !important; }
 
+/* ── Hamburguesa ── */
+.navbar__hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  z-index: 1000;
+}
+
+.navbar__hamburger span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--color-black);
+  border-radius: 2px;
+  transition: all 0.3s ease;
+  transform-origin: center;
+}
+
+.navbar__hamburger.open span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.navbar__hamburger.open span:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+.navbar__hamburger.open span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
 /* ── Sección base ── */
 .section {
   padding: var(--section-padding);
@@ -353,6 +386,106 @@
 @media (max-width: 56.25rem) {
   .footer__top {
     grid-template-columns: 1fr 1fr;
+  }
+
+  .navbar__hamburger { display: flex; }
+
+.navbar__links {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: var(--color-black); /* fallback sólido primero */
+    background-image:
+      radial-gradient(ellipse 80% 60% at 80% 20%, rgba(168,230,61,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 10% 80%, rgba(168,230,61,0.05) 0%, transparent 60%);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    z-index: 999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+  }
+
+  .navbar__links.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .navbar__links::before {
+    content: 'MTM SPORTS';
+    position: absolute;
+    top: 2rem;
+    left: 5%;
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--color-primary);
+    letter-spacing: 2px;
+  }
+
+  .navbar__links::after {
+    content: 'Canchas deportivas · Todo México';
+    position: absolute;
+    bottom: 2rem;
+    left: 0; right: 0;
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .navbar__links li:first-child {
+    margin-top: 0;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(168,230,61,0.15);
+    width: 80%;
+    text-align: center;
+  }
+
+  .navbar__links li {
+    width: 80%;
+    text-align: center;
+  }
+
+  .navbar__links a {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 2.25rem;
+    font-weight: 800;
+    color: rgba(255,255,255,0.75);
+    letter-spacing: 1px;
+    padding: 0.625rem 0;
+    transition: color 0.2s, transform 0.2s;
+  }
+
+  .navbar__links a:hover {
+    color: var(--color-primary);
+    transform: translateX(6px);
+  }
+
+  .navbar__links .navbar__cta {
+    display: inline-block;
+    margin-top: 1rem;
+    background: var(--color-primary) !important;
+    color: var(--color-black) !important;
+    padding: 0.875rem 2.5rem !important;
+    border-radius: 8px !important;
+    font-size: 1rem !important;
+    font-weight: 800 !important;
+    letter-spacing: 1px;
+    transform: none !important;
+  }
+
+  .navbar__links .navbar__cta:hover {
+    background: var(--color-primary-dark) !important;
+    transform: translateY(-2px) !important;
+  }
+
+  .navbar__hamburger.open span {
+    background: var(--color-white);
   }
 }
 
