@@ -235,7 +235,7 @@ async function enviarCotizacion() {
 
     const textoWA = `Hola MTM Sports, me interesa una cotización:%0A%0A*Cancha:* ${cancha}%0A*Nombre:* ${nombre}`;
     setTimeout(() => {
-      window.open(`https://wa.me/5213300000000?text=${textoWA}`, '_blank');
+      window.open(`https://wa.me/523310052207?text=${textoWA}`, '_blank');
     }, 1500);
 
   } catch (err) {

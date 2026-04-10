@@ -6,10 +6,7 @@
 const { createTransport } = require('nodemailer');
 
 const transporter = createTransport({
-    
-  host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT),
-  secure: false, // true para port 465, false para 587
+  service: 'gmail',
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
@@ -216,18 +213,6 @@ async function enviarEmails(data) {
     subject: `🏀 Nuevo lead MTM — ${NOMBRES_CANCHA[data.cancha] ?? data.cancha} · ${data.nombre}`,
     html: htmlNotificacionInterna(data),
   });
-
-  // 2. Confirmación al cliente (solo si el formulario tuviera email)
-  // Por ahora el form no pide email, pero dejamos la estructura lista.
-  // if (data.email) {
-  //   await transporter.sendMail({
-  //     from: process.env.EMAIL_FROM,
-  //     to: data.email,
-  //     subject: 'MTM Sports — Recibimos tu cotización ✅',
-  //     html: htmlConfirmacionCliente(data),
-  //   });
-  // }
 }
 
 module.exports = { enviarEmails };
-
