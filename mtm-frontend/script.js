@@ -11,12 +11,13 @@ camera.position.set(0, 0, 5);
 function crearTextura() {
   const size = 1024;
   const cv = document.createElement('canvas');
-  cv.width = size; 
+  cv.width = size;
   cv.height = size;
   const ctx = cv.getContext('2d');
 
   ctx.fillStyle = '#C8E830';
   ctx.fillRect(0, 0, size, size);
+
 
   const hoyos = [
     [0.15,0.12],[0.45,0.08],[0.75,0.12],[0.95,0.20],
@@ -94,7 +95,12 @@ window.addEventListener('resize', () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-// ── COTIZADOR ──
+// ══════════════════════════════════════════════════════
+//  CONFIGURACIÓN — cambia esta URL al deployar en Railway
+// ══════════════════════════════════════════════════════
+const API_URL = 'https://TU-PROYECTO.up.railway.app/api/cotizacion';
+
+// ── COTIZADOR ─────────────────────────────────────────
 const precios = {
   basquetbol: [80, 150],
   padel:      [120, 200],
@@ -117,48 +123,40 @@ const extras = {
 };
 
 const activos = {
-  pisoPropio: false,
-  asfalto: false,
-  led: false,
-  mallas: false,
-  canastas: false,
-  redes: false,
-  pintura: false,
-  pasto: false,
-  capacitacion: false
+  pisoPropio: false, asfalto: false, led: false,
+  mallas: false, canastas: false, redes: false,
+  pintura: false, pasto: false, capacitacion: false
+};
+
+// Mapa extra key → id del toggle en el HTML
+const TOGGLE_IDS = {
+  pisoPropio: 't-piso-propio', asfalto: 't-asfalto', led: 't-led',
+  mallas: 't-mallas', canastas: 't-canastas', redes: 't-redes',
+  pintura: 't-pintura', pasto: 't-pasto', capacitacion: 't-capacitacion'
 };
 
 function toggleExtra(key) {
+  // PisoPropio y asfalto son mutuamente excluyentes
   if (key === 'pisoPropio' && activos.asfalto) {
     activos.asfalto = false;
-    document.getElementById('t-asfalto').classList.remove('on');
+    document.getElementById(TOGGLE_IDS.asfalto)?.classList.remove('on');
   }
-
   if (key === 'asfalto' && activos.pisoPropio) {
     activos.pisoPropio = false;
-    document.getElementById('t-piso-propio').classList.remove('on');
+    document.getElementById(TOGGLE_IDS.pisoPropio)?.classList.remove('on');
   }
 
   activos[key] = !activos[key];
-
-  const toggleId =
-    key === 'pisoPropio' ? 't-piso-propio' :
-    key === 'asfalto'    ? 't-asfalto' :
-    key === 'led'        ? 't-led' :
-    key === 'mallas'     ? 't-mallas' :
-    key === 'canastas'   ? 't-canastas' :
-    key === 'redes'      ? 't-redes' :
-    key === 'pintura'    ? 't-pintura' :
-    key === 'pasto'      ? 't-pasto' :
-                           't-capacitacion';
-
-  document.getElementById(toggleId).classList.toggle('on', activos[key]);
+  document.getElementById(TOGGLE_IDS[key])?.classList.toggle('on', activos[key]);
   calcular();
 }
 
 function fmt(n) {
   return '$' + Math.round(n).toLocaleString('es-MX') + ',000 MXN';
 }
+
+// Valores del estimado actual (para enviarlos al backend)
+let estimadoActual = { min: null, max: null };
 
 function calcular() {
   const cancha = document.getElementById('cancha').value;
@@ -175,59 +173,108 @@ function calcular() {
   });
 
   min = Math.max(min, 20);
+  estimadoActual = { min, max };
 
-  document.getElementById('estimado-precio').textContent =
-    fmt(min) + ' — ' + fmt(max);
-
+  document.getElementById('estimado-precio').textContent = fmt(min) + ' — ' + fmt(max);
   document.getElementById('estimado-box').classList.add('show');
 }
 
-function enviarCotizacion() {
+// ── Envío al backend ──────────────────────────────────
+async function enviarCotizacion() {
   const nombre = document.getElementById('f-nombre').value.trim();
   const tel    = document.getElementById('f-tel').value.trim();
   const cancha = document.getElementById('cancha').value;
 
   if (!nombre || !tel || !cancha) {
-    alert('Por favor completa al menos: tipo de cancha, nombre y teléfono.');
+    mostrarError('Por favor completa al menos: tipo de cancha, nombre y teléfono.');
     return;
   }
 
-  const ciudad   = document.getElementById('f-ciudad').value;
-  const tipo     = document.getElementById('f-tipo').value;
-  const msg      = document.getElementById('f-msg').value;
-  const estimado = document.getElementById('estimado-precio').textContent;
+  const ciudad      = document.getElementById('f-ciudad').value.trim();
+  const tipoCliente = document.getElementById('f-tipo').value;
+  const comentarios = document.getElementById('f-msg').value.trim();
 
-  const extrasActivos = Object.keys(activos)
-    .filter(k => activos[k])
-    .join(', ') || 'Ninguno';
+  const extrasActivos = Object.keys(activos).filter(k => activos[k]);
 
-  const texto = `Hola MTM Sports, me interesa una cotización:%0A%0A*Cancha:* ${cancha}%0A*Extras:* ${extrasActivos}%0A*Estimado:* ${estimado}%0A*Nombre:* ${nombre}%0A*Ciudad:* ${ciudad}%0A*Cliente:* ${tipo}%0A*Comentarios:* ${msg}`;
+  const payload = {
+    nombre,
+    telefono:    tel,
+    cancha,
+    extras:      extrasActivos,
+    ciudad,
+    tipoCliente,
+    comentarios,
+    estimadoMin: estimadoActual.min,
+    estimadoMax: estimadoActual.max,
+  };
 
-  window.open(`https://wa.me/5213300000000?text=${texto}`, '_blank');
-  document.getElementById('form-success').classList.add('show');
+  // Estado de carga en el botón
+  const btn = document.querySelector('.form-submit');
+  const textoOriginal = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'Enviando…';
+
+  try {
+    const res = await fetch(API_URL, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(payload),
+    });
+
+    const json = await res.json();
+
+    if (!res.ok) {
+      // El backend devolvió un error controlado
+      const msg = json.detalles?.join(' · ') ?? json.error ?? 'Error al enviar.';
+      mostrarError(msg);
+      return;
+    }
+
+    // ✅ Éxito: mostrar mensaje y abrir WhatsApp como respaldo
+    document.getElementById('form-success').classList.add('show');
+
+    const textoWA = `Hola MTM Sports, me interesa una cotización:%0A%0A*Cancha:* ${cancha}%0A*Nombre:* ${nombre}`;
+    setTimeout(() => {
+      window.open(`https://wa.me/5213300000000?text=${textoWA}`, '_blank');
+    }, 1500);
+
+  } catch (err) {
+    // Error de red (sin conexión, CORS, etc.)
+    mostrarError('No se pudo conectar con el servidor. Por favor escríbenos por WhatsApp.');
+    console.error('[cotizacion] Error de red:', err);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = textoOriginal;
+  }
 }
 
-// ── FAQ ──
+function mostrarError(msg) {
+  // Reutiliza el bloque de éxito con estilo de error si no tienes uno propio
+  const el = document.getElementById('form-success');
+  el.style.background = 'rgba(255,80,80,0.1)';
+  el.style.borderColor = 'rgba(255,80,80,0.4)';
+  el.querySelector('.form-success__title').style.color = '#ff6b6b';
+  el.querySelector('.form-success__title').textContent = '⚠️ ' + msg;
+  el.querySelector('.form-success__sub').textContent = 'También puedes escribirnos directamente por WhatsApp.';
+  el.classList.add('show');
+}
+
+// ── FAQ ───────────────────────────────────────────────
 function toggleFaq(el) {
-  const item = el.parentElement;
+  const item   = el.parentElement;
   const isOpen = item.classList.contains('open');
-
-  document.querySelectorAll('.faq-item')
-    .forEach(i => i.classList.remove('open'));
-
+  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
   if (!isOpen) item.classList.add('open');
 }
 
-// ── MENÚ HAMBURGUESA ──
+// ── MENÚ HAMBURGUESA ──────────────────────────────────
 function toggleMenu() {
-  const menu       = document.getElementById('nav-menu');
-  const hamburger  = document.getElementById('hamburger');
-  const isOpen     = menu.classList.contains('open');
+  const menu      = document.getElementById('nav-menu');
+  const hamburger = document.getElementById('hamburger');
+  const isOpen    = menu.classList.contains('open');
 
   menu.classList.toggle('open', !isOpen);
   hamburger.classList.toggle('open', !isOpen);
-
-  // Bloquear scroll del body cuando el menú está abierto
   document.body.style.overflow = isOpen ? '' : 'hidden';
 }
 
@@ -239,7 +286,6 @@ function cerrarMenu() {
   document.body.style.overflow = '';
 }
 
-// Cerrar menú al hacer resize a desktop
 window.addEventListener('resize', () => {
   if (window.innerWidth > 900) cerrarMenu();
 });
