@@ -1,5 +1,7 @@
 // src/index.js
 require('dotenv').config();
+console.log('DATABASE_URL:', process.env.DATABASE_URL ? 'definida ✅' : 'UNDEFINED ❌');
+
 const express    = require('express');
 const helmet     = require('helmet');
 const cors       = require('cors');
@@ -13,12 +15,9 @@ const app  = express();
 const PORT = process.env.PORT || 3000;
 
 // Inicializar Prisma con la URL explícita
-const prisma = new PrismaClient({
-  datasources: {
-    db: { url: process.env.DATABASE_URL },
-  },
-  log: ['error'],
-});
+const prisma = new PrismaClient({ log: ['error'] });
+
+
 
 // ═══════════════════════════════════════════════════
 //  SEGURIDAD
