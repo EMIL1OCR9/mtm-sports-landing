@@ -98,7 +98,7 @@ window.addEventListener('resize', () => {
 // ══════════════════════════════════════════════════════
 //  CONFIGURACIÓN — cambia esta URL al deployar en Railway
 // ══════════════════════════════════════════════════════
-const API_URL = 'https://mtm-sports-landing-production.up.railway.app/';
+const API_URL = 'https://mtm-sports-landing-production.up.railway.app/api/cotizacion';
 
 // ── COTIZADOR ─────────────────────────────────────────
 const precios = {
